@@ -1,22 +1,20 @@
 <template>
-  <div class="task-list__button">
-    <div class="task">
-      <div class="task__content">
-        <input
-          v-model="task.name"
-          type="text"
-          class="task__name-input"
-        />
-        {{task.priority}}
-        <button class="btn-blank task__check-button" @click="checkTask">
+  <div class="task-button">
+    <div class="task-button__view">
+      <div class="task-button__content">
+        <span class="task-button__name" :class="{'task-button__name--check': task.isCheck}">{{ task.name }}</span>
+        <span class="task-button__priority">{{ task.priority }}</span>
+        <button
+          class="btn-blank task-button__check-button"
+          @click="task.isCheck = !task.isCheck"
+        >
           <svg
             viewBox="0 0 512 512"
             xmlns="http://www.w3.org/2000/svg"
-            class="task-list__check"
+            class="icon icon--small"
           >
             <path
               v-if="task.isCheck"
-              class="check"
               d="m 375 200c 7 7 7 20 0 28l-134 134c-7 7-20 7-28 0l-63-63c-7-7-7-20 0-28 7-7 20-7 28 0l 49 49 120-120c 7-7 20-7 28 0z"
             />
 
@@ -27,13 +25,10 @@
         </button>
       </div>
 
-      <div class="task-menu">
-        <button class="btn-blank task-menu__button task-menu__button--blue">
-          Rename
-        </button>
+      <div class="task-button__menu">
         <button
-          class="btn-blank task-menu__button task-menu__button--red"
-          @click="deleteTask"
+          class="btn-blank task-button__menu-button task-button__menu-button--red"
+          @click="$emit('deleteTaskEvent', task)"
         >
           Delete
         </button>
@@ -47,28 +42,18 @@ export default {
   props: ["task_prop"],
   data() {
     return {
-      task: this.task_prop
-    }
-  },
-  methods: {
-    checkTask() {
-      this.$emit("completeTask", this.task);
-    },
-    deleteTask() {
-      this.$emit("deleteTask", this.task);
-    },
+      task: this.task_prop,
+    };
   },
   mounted() {
-    const task = document.querySelectorAll(".task"),
-      taskMenu = document.querySelector(".task-menu");
+    const task = document.querySelectorAll(".task-button__view"),
+      taskMenu = document.querySelector(".task-button__menu");
 
     const taskMenuWidth = taskMenu.clientWidth;
 
     var touchStart = 0,
       touchMove = 0,
       taskPos = 0;
-
-    var isWait = true;
 
     task.forEach((item) => {
       item.addEventListener("touchstart", (e) => {
@@ -84,17 +69,11 @@ export default {
       });
 
       item.addEventListener("touchend", () => {
-        if (touchMove < -taskMenuWidth / 1.2) {
-          taskPos = -taskMenuWidth;
-        } else {
-          taskPos = 0;
-        }
+        taskPos = (touchMove < -taskMenuWidth / 1.2) ? -taskMenuWidth : 0
         item.style.transform = "translateX(" + taskPos + "px)";
-        if (isWait) {
-          setTimeout(() => {
-            item.style.transform = "translateX(" + 0 + "px)";
-          }, 5000);
-        }
+        setTimeout(() => {
+          item.style.transform = "translateX(" + 0 + "px)";
+        }, 5000);
       });
     });
   },
@@ -102,61 +81,55 @@ export default {
 </script>
 
 <style scoped>
-textarea {
-  display: block;
-  resize: both;
-}
-
-.task-list__button {
+.task-button {
   border: 1px solid #2c3e50;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.task-list__check {
-  width: 22px;
-}
-
-.task {
+.task-button__view {
   display: flex;
   transform: translateX(0);
   transition-duration: 0.2s;
 }
 
-.task__content {
+.task-button__content {
   min-width: 100%;
   padding: 9px 13px;
-  text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.task__name-input {
-  border: none;
+.task-button__name {
   font-size: 14px;
   padding: 5px 0;
   width: 100%;
 }
 
-.task__check-button {
-  padding: 4px;
+.task-button__name--check {
+  text-decoration: line-through;
+  color: var(--font-grey);
 }
 
-.task-menu {
+.task-button__priority {
+  color: var(--font-grey);
+}
+
+.task-button__check-button {
+  margin-left: 8px;
+}
+
+.task-button__menu {
   display: flex;
 }
 
-.task-menu__button {
+.task-button__menu-button {
   padding: 0 7px;
   color: var(--white);
 }
 
-.task-menu__button--blue {
-  background-color: #006fe6;
-}
-
-.task-menu__button--red {
+.task-button__menu-button--red {
   background-color: #d23242;
 }
 </style>

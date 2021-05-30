@@ -1,28 +1,139 @@
 <template>
-  <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <TaskList />
-  <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
+  <ListHeader
+    v-if="isListOpen"
+    :listStarred_prop="selectedList.isStarred"
+    :listName_prop="selectedList.name"
+    @listStarred="selectedList.isStarred = !selectedList.isStarred"
+    @changeListNameEvent="changeListName"
+  />
+  <ListCatalogue
+    v-if="!isListOpen"
+    :lists_prop="lists"
+    @openListEvent="openList"
+  />
+  <TaskCatalogue
+    v-if="isListOpen"
+    :taskList_prop="selectedList.tasks"
+    @spliceTaskEvent="spliceTask"
+  />
+  <ListMenu
+    v-if="isListOpen"
+    @newTask="addNewTask"
+    @closeList="isListOpen = !isListOpen"
+    @deleteListEvent="deleteList"
+  />
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
-import TaskList from "./components/TaskList.vue";
+import ListHeader from "./components/ListHeader.vue";
+import ListCatalogue from "./components/ListCatalogue.vue";
+import TaskCatalogue from "./components/TaskCatalogue.vue";
+import ListMenu from "./components/ListMenu.vue";
 
 export default {
   name: "App",
   components: {
-    // HelloWorld,
-    TaskList,
+    ListHeader,
+    ListCatalogue,
+    TaskCatalogue,
+    ListMenu,
+  },
+  methods: {
+    openList(list) {
+      this.selectedList = list;
+      this.isListOpen = true;
+    },
+    changeListName(newName) {
+      this.selectedList.name = newName;
+    },
+    addNewTask(newTask) {
+      this.selectedList.tasks.push({
+        id: this.selectedList.tasks.length,
+        name: newTask.name,
+        isCheck: false,
+        priority: newTask.priority,
+      });
+    },
+    deleteList() {
+      const index = this.lists.findIndex(
+        (item) => item.id === this.selectedList.id
+      );
+      if (index !== -1) {
+        this.lists.splice(index, 1);
+      }
+
+      this.isListOpen = false;
+    },
+    spliceTask(task) {
+      const index = this.selectedList.tasks.findIndex(
+        (item) => item.id === task.id
+      );
+      if (index !== -1) {
+        this.selectedList.tasks.splice(index, 1);
+      }
+    },
   },
   data() {
     return {
-      taskList: [
+      isListOpen: false,
+      selectedList: undefined,
+      lists: [
         {
-          name: "Example task",
-          isCheck: false,
+          name: "List 1",
+          id: 0,
+          isStarred: false,
+          tasks: [
+            {
+              id: 0,
+              name: "Example task 1",
+              isCheck: false,
+              priority: "Month",
+            },
+            {
+              id: 1,
+              name: "Example task 2",
+              isCheck: false,
+              priority: "Day",
+            },
+          ],
+        },
+        {
+          name: "List 2",
+          id: 1,
+          isStarred: false,
+          tasks: [
+            {
+              id: 0,
+              name: "Another task 1",
+              isCheck: false,
+              priority: "Month",
+            },
+            {
+              id: 1,
+              name: "Another task 2",
+              isCheck: false,
+              priority: "Week",
+            },
+            {
+              id: 2,
+              name: "Another task 2",
+              isCheck: true,
+              priority: "Day",
+            },
+          ],
         },
       ],
     };
+  },
+  watch: {
+    selectedList() {
+      const index = this.lists.findIndex(
+        (item) => item.id === this.selectedList.id
+      );
+      if (index !== -1) {
+        this.lists[index] = this.selectedList;
+      }
+    },
   },
 };
 </script>
@@ -62,11 +173,7 @@ input {
 
 [type="radio"]:checked + label {
   background-color: var(--blue);
-  color: var(--white)
-}
-
-svg {
-   width: 27px;
+  color: var(--white);
 }
 
 body {
@@ -77,7 +184,7 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
   color: var(--font-black);
 }
 
@@ -87,15 +194,41 @@ body {
   /* width: 100%; */
 }
 
-/* Something */
-
-.header-input {
+.input-blank {
   border: none;
   outline: none;
   background: none;
-  width: 240px;
-  font-size: 35px;
-  font-weight: 700;
+}
+
+.container {
+  padding: 20px;
+}
+
+.icon {
+  width: 34px;
+}
+
+.icon--small {
+  width: 24px;
+}
+
+.icon--starred {
+  fill: var(--grey);
+  transition-duration: 0.4s;
+}
+
+.icon--starred-active {
+  fill: var(--yellow);
+}
+
+.icon--rotate {
+  transform: rotate(180deg);
+}
+
+/* Something */
+
+.arrow-img {
+  width: 30px;
 }
 
 .back-button {
