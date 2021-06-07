@@ -10,7 +10,9 @@
     v-if="!isListOpen"
     :lists_prop="lists"
     @openListEvent="openList"
+    @addNewListEvent="addNewList"
   />
+
   <TaskCatalogue
     v-if="isListOpen"
     :taskList_prop="selectedList.tasks"
@@ -71,6 +73,17 @@ export default {
       if (index !== -1) {
         this.selectedList.tasks.splice(index, 1);
       }
+    },
+    addNewList() {
+      this.lists.push({
+        name: "List",
+        id: this.lists.length,
+        isStarred: false,
+        tasks: [],
+      });
+      this.openList(this.lists[this.lists.length - 1]);
+      console.log(document.querySelector("header__input"))
+      document.querySelector("header__input").focus()
     },
   },
   data() {
@@ -233,6 +246,13 @@ body {
 
 .back-button {
   transform: rotate(180deg);
+}
+
+.empty-list {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 30px;
+  opacity: .7;
 }
 
 /* Animation */

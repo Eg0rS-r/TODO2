@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="empty-list" v-if="tasks.length === 0">Nothing so far</div>
     <TaskList :tasks_prop="notDoneTaskList" @removeTaskEvent="removeTask" />
 
     <transition name="fade">
@@ -16,7 +17,7 @@
           </h3>
         </button>
         <transition name="slide-bottom-fade">
-          <TaskList :tasks_prop="doneTaskList" v-if="isCompleteTaskOpen" />
+          <TaskList :tasks_prop="doneTaskList" v-if="isCompleteTaskOpen" @removeTaskEvent="removeTask" />
         </transition>
       </div>
     </transition>
@@ -53,7 +54,7 @@ export default {
     doneTaskList() {
       return this.tasks.filter((e) => {
         return e.isCheck;
-      });
+      }).reverse();
     },
     notDoneTaskList() {
       return this.tasks.filter((e) => {
