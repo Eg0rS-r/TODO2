@@ -13,11 +13,11 @@
     <button
       class="btn-blank"
       @click="$emit('listStarred')"
+      aria-label="Starred list"
     >
       <svg
         class="icon icon--starred"
         :class="{ 'icon--starred-active': listStarred_prop }"
-
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -47,7 +47,7 @@ export default {
     headerInputBlur() {
       document.querySelector(".header__input").blur();
     },
-  }
+  },
 };
 </script>
 

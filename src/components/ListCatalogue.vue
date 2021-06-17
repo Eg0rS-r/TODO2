@@ -5,8 +5,9 @@
         <li v-for="list in lists_prop" :key="list.id" class="list__item">
           <button
             class="btn-blank list__button"
-            :class="{'list__button--starred': list.isStarred}"
+            :class="{ 'list__button--starred': list.isStarred }"
             @click="$emit('openListEvent', list)"
+            aria-label="Open list"
           >
             {{ list.name }}
 
@@ -23,6 +24,7 @@
       <button
         class="btn-blank add-list__button"
         @click="$emit('addNewListEvent')"
+        aria-label="Add new list"
       >
         <svg
           class="icon add-list__svg"
@@ -69,7 +71,7 @@ export default {
 }
 
 .list__button--starred {
-  background-color: #FFDC4E;
+  background-color: #ffdc4e;
 }
 
 .add-list__button {

@@ -7,6 +7,7 @@
         <button
           class="btn-blank task-button__check-button"
           @click="task.isCheck = !task.isCheck"
+          aria-label="Check task"
         >
           <svg
             viewBox="0 0 512 512"

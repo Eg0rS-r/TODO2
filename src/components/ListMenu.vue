@@ -43,7 +43,11 @@
         </li>
       </ul>
 
-      <button class="btn-blank task-add__button" @click="taskApply">
+      <button
+        class="btn-blank task-add__button"
+        @click="taskApply"
+        aria-label="Add new task"
+      >
         <svg
           class="icon icon--small"
           viewBox="0 0 426 426"
@@ -58,14 +62,29 @@
     </div>
 
     <div class="list-option">
-      <button class="btn-blank" @click="$emit('closeList')">
-        <img class="icon icon--rotate" src="../assets/image/icon/arrow-right.svg" alt="Arrow right icon">
+      <button
+        class="btn-blank"
+        @click="$emit('closeList')"
+        aria-label="Close list"
+      >
+        <img
+          class="icon icon--rotate"
+          src="../assets/image/icon/arrow-right.svg"
+          alt="Arrow right icon"
+        />
       </button>
-      <button class="btn-blank" @click="$emit('deleteListEvent')">
-        <img class="icon" src="../assets/image/icon/trash.svg" alt="Trash icon">
+      <button
+        class="btn-blank"
+        @click="$emit('deleteListEvent')"
+        aria-label="Delete list"
+      >
+        <img
+          class="icon"
+          src="../assets/image/icon/trash.svg"
+          alt="Trash icon"
+        />
       </button>
     </div>
-
   </div>
 </template>
 
@@ -116,14 +135,16 @@ export default {
     });
 
     menu.addEventListener("touchend", () => {
-      nowPos = (touchMove < -menuHeight / 1.6) ? -menuHeight : defaultPos
+      nowPos = touchMove < -menuHeight / 1.6 ? -menuHeight : defaultPos;
       menu.style.transform = "translateY(" + nowPos + "px)";
     });
 
     taskAddInput.onfocus = function () {
       menu.style.transform =
         "translateY(" +
-        (-menuHeight + document.querySelector(".list-option").clientHeight + 25) +
+        (-menuHeight +
+          document.querySelector(".list-option").clientHeight +
+          25) +
         "px)";
     };
   },

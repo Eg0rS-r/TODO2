@@ -13,6 +13,13 @@
     @addNewListEvent="addNewList"
   />
 
+  <ListCatalogue
+    v-if="!isListOpen"
+    :lists_prop="statisticList"
+    @openListEvent="openList"
+    @addNewListEvent="addNewList"
+  />
+
   <TaskCatalogue
     v-if="isListOpen"
     :taskList_prop="selectedList.tasks"
@@ -82,8 +89,8 @@ export default {
         tasks: [],
       });
       this.openList(this.lists[this.lists.length - 1]);
-      console.log(document.querySelector("header__input"))
-      document.querySelector("header__input").focus()
+      console.log(document.querySelector("header__input"));
+      document.querySelector("header__input").focus();
     },
   },
   data() {
@@ -99,7 +106,7 @@ export default {
             {
               id: 0,
               name: "Example task 1",
-              isCheck: false,
+              isCheck: true,
               priority: "Month",
             },
             {
@@ -146,6 +153,27 @@ export default {
       if (index !== -1) {
         this.lists[index] = this.selectedList;
       }
+    },
+  },
+  computed: {
+    statisticList() {
+      let taskList = [];
+      this.lists.forEach((item) => {
+        taskList = taskList.concat(
+          item.tasks.filter((element) => {
+            return element.isCheck === true;
+          })
+        );
+      });
+      
+      return [
+        {
+          name: "Checked",
+          id: 9999,
+          isStarred: false,
+          tasks: taskList,
+        },
+      ];
     },
   },
 };
@@ -252,7 +280,7 @@ body {
   text-align: center;
   font-size: 20px;
   margin-top: 30px;
-  opacity: .7;
+  opacity: 0.7;
 }
 
 /* Animation */
